@@ -2,7 +2,9 @@ package keeper
 
 import (
 	"context"
+	"strconv"
 
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -16,8 +18,16 @@ func (k Keeper) GetState(goCtx context.Context, req *types.QueryGetStateRequest)
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Process the query
-	_ = ctx
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.StateKeyPrefix))
 
-	return &types.QueryGetStateResponse{}, nil
+	b := store.Get(types.StateKey(
+		strconv.FormatUint(req.Id, 10),
+	))
+	if b == nil {
+		return nil, status.Error(codes.NotFound, "not found")
+	}
+	val := types.MsgSetState{}
+	k.cdc.MustUnmarshal(b, &val)
+
+	return &types.QueryGetStateResponse{Value: val.Value}, nil
 }
