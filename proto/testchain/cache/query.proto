@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 package testchain.cache;
 
 import "gogoproto/gogo.proto";
@@ -10,17 +11,34 @@ option go_package = "testchain/x/cache/types";
 
 // Query defines the gRPC querier service.
 service Query {
+  
   // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+  rpc Params (QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/testchain/cache/params";
+  
+  }
+  
+  // Queries a list of GetState items.
+  rpc GetState (QueryGetStateRequest) returns (QueryGetStateResponse) {
+    option (google.api.http).get = "/testchain/cache/get_state/{id}";
+  
   }
 }
-
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
+  
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
 }
+
+message QueryGetStateRequest {
+  uint64 id = 1;
+}
+
+message QueryGetStateResponse {
+  string value = 1;
+}
+
