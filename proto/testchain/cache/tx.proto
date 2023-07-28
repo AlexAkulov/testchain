@@ -1,7 +1,18 @@
 syntax = "proto3";
+
 package testchain.cache;
 
 option go_package = "testchain/x/cache/types";
 
 // Msg defines the Msg service.
-service Msg {}
+service Msg {
+  rpc SetState (MsgSetState) returns (MsgSetStateResponse);
+}
+message MsgSetState {
+  string creator = 1;
+  uint64 id      = 2;
+  string value   = 3;
+}
+
+message MsgSetStateResponse {}
+
