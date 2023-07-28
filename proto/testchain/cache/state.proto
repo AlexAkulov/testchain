@@ -1,0 +1,10 @@
+syntax = "proto3";
+package testchain.cache;
+
+option go_package = "testchain/x/cache/types";
+
+message State {
+  
+  uint64 id = 1; 
+  string value = 2; 
+}
